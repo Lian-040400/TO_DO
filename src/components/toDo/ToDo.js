@@ -8,10 +8,10 @@ class ToDo extends Component {
         inputValue: "",
         tasks: [],
         checked:false,
-        selectedTasks:[],
+        selectedTasks:new Set(),
     };
 
-    handleClick = () => {
+    addTasks = () => {
         let inputValue = this.state.inputValue.trim();
         if (!inputValue) {
             return;
@@ -44,25 +44,34 @@ class ToDo extends Component {
         });
 
     }
-    selectedTasks=(taskId)=>{
-        console.log(taskId);
-    }
-    handleCheck=(taskId)=>{
-        let tasksArray=new Set();
-         this.setState({checked: !this.state.checked});
-        
-            // if (tasksArray.has(taskId)&&this.state.checked==="true") {
-            //     this.setState({checked: !this.state.checked});
-            //     tasksArray.delete(taskId);
-            // }
-            // else {
-            //     tasksArray.add(taskId);
-            //     this.setState({checked: !this.state.checked});
-            // }
 
-         
-         console.log(tasksArray);
-         
+    deleteSelectedTasks=()=>{
+        const {tasks,selectedTasks}=this.state;
+        const newTasks=tasks.filter((task)=>!selectedTasks.has(task._id));
+        this.setState({
+            tasks:newTasks,
+            selectedTasks:new Set(),
+        });
+    }
+
+    handleCheck=(taskId)=>{
+        let {selectedTasks}=this.state;
+        
+            if (selectedTasks.has(taskId)) {
+                selectedTasks.delete(taskId);
+            }
+            else {
+                selectedTasks.add(taskId);
+            }
+            this.setState({
+                selectedTasks,
+            });
+    }
+    handleKeyDawn=(event)=>{
+
+        if(event.key==="Enter"){
+           this.addTasks();
+        }
     }
 
     render() {
@@ -92,8 +101,10 @@ class ToDo extends Component {
                                     the card's content.
                                 </Card.Text>
                                 <Button
+                               
                                     variant="danger"
-                                    onClick={() => (this.deleteTask(task._id))}>
+                                    onClick={() => (this.deleteTask(task._id))}
+                                    disabled={!!this.state.selectedTasks.size}>
                                     Delete
                                 </Button>
                             </Card.Body>
@@ -118,21 +129,33 @@ class ToDo extends Component {
                                     placeholder="Add your task"
                                     value={inputValue}
                                     onChange={this.handleChange}
+                                     onKeyDown={this.handleKeyDawn}
                                 />
                                 <InputGroup.Append>
                                     <Button
-                                    
-                                        onClick={this.handleClick} >
-                                        Add
+                                    disabled={!!this.state.selectedTasks.size}
+                                        onClick={this.addTasks} 
+                                        >
+                                            
+                                        Add task
                                 </Button>
-                                
-                                    <Button
-                                    variant="danger">
-                                        Delete all</Button>
                                 </InputGroup.Append>
                             </InputGroup>
                         </Col>
                     </Row>
+                    <Row  className="justify-content-center">
+                        <Col
+                          xs={2}>
+                    <Button
+                     hidden={!this.state.selectedTasks.size}
+                                    className={styles.deleteAllSelectedTasksButton}
+                                    variant="danger"
+                                    onClick={this.deleteSelectedTasks}
+                                        >
+                                        Delete all selected tasks
+                        </Button>
+                        </Col>
+                 </Row>                    
                     <Row>
                         {taskComponent}
                     </Row>

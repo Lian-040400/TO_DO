@@ -2,7 +2,8 @@
  .task{
     margin:20px 0 ;
 }
-.k{
-    display: flex;
-    justify-content:center;
+
+.deleteAllSelectedTasksButton{
+    margin-bottom:20px;
+    margin-top:20px;
 }
