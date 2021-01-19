@@ -1,40 +1,27 @@
 import React, { Component } from "react";
-import { Container, Col, Row, FormControl, InputGroup, Button, Card } from "react-bootstrap";
+import { Container, Col, Row, Button} from "react-bootstrap";
+import Task  from "../task/Task";
+import NewTask  from "../newTask/NewTask";
+
 import styles from "./toDo.module.css";
-import idGenerator from "../../additional_function/idGenerator"
 class ToDo extends Component {
 
     state = {
-        inputValue: "",
         tasks: [],
-        checked:false,
         selectedTasks:new Set(),
     };
 
-    addTasks = () => {
-        let inputValue = this.state.inputValue.trim();
-        if (!inputValue) {
-            return;
-        }
-        let task = {
-            _id: idGenerator(),
-            title: inputValue,
-        }
+    addTasks = (task) => {
+        
         let tasks = [...this.state.tasks, task];
         this.setState({
-            inputValue: "",
             tasks,
         });
 
     };
 
-    handleChange = (event) => {
+    
 
-        this.setState({
-            inputValue: event.target.value,
-        });
-
-    };
     deleteTask = (taskId) => {
         let tasks = this.state.tasks.filter(task => {
             return taskId !== task._id;
@@ -67,52 +54,28 @@ class ToDo extends Component {
                 selectedTasks,
             });
     }
-    handleKeyDawn=(event)=>{
-
-        if(event.key==="Enter"){
-           this.addTasks();
-        }
-    }
+   
 
     render() {
         const { inputValue, tasks } = this.state;
         let taskComponent = tasks.map((task) => {
+           
             return (
+
+        
                 <Col key={task._id}
                     xs={12}
                     sm={6}
                     md={4}
                     xl={3}>
-                    <div>
-                        <Card className={styles.task}>
-                            <Card.Body>
-                                <InputGroup className="mb-3">
-                                    <InputGroup.Prepend>
-                                        <InputGroup.Checkbox
-                                         defaultChecked={false}
-                                         onChange={()=>this.handleCheck(task._id)}
-                                         
-                                          />
-                                    </InputGroup.Prepend>
-                                </InputGroup>
-                                <Card.Title>{task.title}</Card.Title>
-                                <Card.Text>
-                                    Some quick example text to build on the card title and make up the bulk of
-                                    the card's content.
-                                </Card.Text>
-                                <Button
-                               
-                                    variant="danger"
-                                    onClick={() => (this.deleteTask(task._id))}
-                                    disabled={!!this.state.selectedTasks.size}>
-                                    Delete
-                                </Button>
-                            </Card.Body>
-                        </Card>
-
-                    </div>
+                    <Task data={task}
+                    onHandleCheck={this.handleCheck}
+                    onDeleteTask={this.deleteTask}
+                    addNewTasks={this.addTasks}
+                    disabled={!!this.state.selectedTasks.size}
+                    />
                 </Col>
-            )
+            );
         })
 
         return (
@@ -121,31 +84,18 @@ class ToDo extends Component {
                 <Container>
                     <Row className="justify-content-center">
                         <Col
-                        
-                         xs={8}
+                        xs={8}
                          >
-                            <InputGroup>
-                                <FormControl
-                                    placeholder="Add your task"
-                                    value={inputValue}
-                                    onChange={this.handleChange}
-                                     onKeyDown={this.handleKeyDawn}
-                                />
-                                <InputGroup.Append>
-                                    <Button
-                                    disabled={!!this.state.selectedTasks.size}
-                                        onClick={this.addTasks} 
-                                        >
-                                            
-                                        Add task
-                                </Button>
-                                </InputGroup.Append>
-                            </InputGroup>
+                          <NewTask
+                          disabled={!!this.state.selectedTasks.size}
+                          addNewTaskFunc={this.addTasks}/>  
                         </Col>
                     </Row>
                     <Row  className="justify-content-center">
                         <Col
-                          xs={2}>
+                          xs={8}
+                          sm={6}
+                          md={4}>
                     <Button
                      hidden={!this.state.selectedTasks.size}
                                     className={styles.deleteAllSelectedTasksButton}
