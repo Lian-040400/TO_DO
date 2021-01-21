@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { InputGroup, Button, Card } from "react-bootstrap";
 import styles from "./task.module.css";
+import PropTypes from 'prop-types';
 
 class Task extends Component {
 
@@ -48,5 +49,12 @@ class Task extends Component {
 
         );
     }
+}
+Task.propTypes={
+    disabled:PropTypes.bool.isRequired,
+    onDeleteTask:PropTypes.func.isRequired,
+    addNewTasks:PropTypes.func.isRequired,
+    onHandleCheck:PropTypes.func.isRequired,
+
 }
 export default Task;

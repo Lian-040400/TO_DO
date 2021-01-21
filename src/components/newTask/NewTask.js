@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { FormControl, InputGroup, Button } from "react-bootstrap";
 import idGenerator from "../../additional_function/idGenerator";
-
+import PropTypes from 'prop-types';
 class NewTask extends Component {
 
     state = {
@@ -61,6 +61,12 @@ class NewTask extends Component {
             </InputGroup>
         );
     }
+
+}
+
+NewTask.propTypes={
+    disabled:PropTypes.bool.isRequired,
+    addNewTaskFunc:PropTypes.func.isRequired,
 
 }
 export default NewTask;
