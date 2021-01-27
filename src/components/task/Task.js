@@ -2,25 +2,22 @@ import React, { Component } from "react";
 import { InputGroup, Button, Card } from "react-bootstrap";
 import styles from "./task.module.css";
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash,faEdit } from '@fortawesome/free-solid-svg-icons'
 
 class Task extends Component {
 
-    state = {
-        checked: false,
-    }
+    
 
     onToggle = () => {
         const {onHandleCheck,data}= this.props;
         onHandleCheck(data._id);
-        this.setState({
-            checked: !this.state.checked,
-        });
+        
     }
 
     render() {
         const task = this.props.data;
-        const { checked } = this.state;
-        const { onDeleteTask, disabled } = this.props;
+        const { onDeleteTask,onEditTask, disabled,checked } = this.props;
 
         return (
             <Card className={`${styles.tasks}  ${checked ? styles.selected : ""}`}>
@@ -29,20 +26,31 @@ class Task extends Component {
                         <InputGroup.Prepend>
                             <InputGroup.Checkbox
                                 onChange={this.onToggle}
+                                checked={checked}
                             />
                         </InputGroup.Prepend>
                     </InputGroup>
                     <Card.Title>{task.title}</Card.Title>
                     <Card.Text>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.
+                       {task.description}
                                 </Card.Text>
+                    <Button
+                        variant="warning"
+                        onClick={() => onEditTask(task)}
+                        
+                        className="m-1"
+                    >
+                        <FontAwesomeIcon icon={faEdit}/>
+                    </Button>
                     <Button
                         variant="danger"
                         onClick={() => onDeleteTask(task._id)}
                         disabled={disabled}
+                        className="m-1"
                     >
-                        Delete
+                        <FontAwesomeIcon icon={faTrash}/>
+
+                        
                     </Button>
                 </Card.Body>
             </Card>

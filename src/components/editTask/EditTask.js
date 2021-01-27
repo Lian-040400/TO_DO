@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import { FormControl,  Button, Modal, Form } from "react-bootstrap";
-import idGenerator from "../../additional_function/idGenerator";
 import PropTypes from 'prop-types';
-class NewTask extends Component {
+class EditTask extends Component {
 
-    state = {
-        title: "",
-        description:"",
+    constructor(props){
+        super(props);
+        this.state={
+            ...props.data,
+        };
     }
+   
 
     handleChange = (event) => {
         const {name,value}=event.target;
@@ -21,21 +23,18 @@ class NewTask extends Component {
 
         let title = this.state.title.trim();
         let description = this.state.description.trim();
-        
         if (!title) {
             return;
         }
-        let task = {
-            _id: idGenerator(),
+        this.props.onSave({
+            _id:this.state._id,
             title,
             description,
-        }
-        this.props.addNewTaskFunc(task);
-    }
+        });
+    };
 
 
     render() {
-       
         return (
             <>
 
@@ -49,7 +48,7 @@ class NewTask extends Component {
                 >
                     <Modal.Header closeButton>
                         <Modal.Title id="contained-modal-title-vcenter">
-                            Add new Task
+                           Edit Task
                          </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
@@ -75,11 +74,11 @@ class NewTask extends Component {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button
-                            variant="success"
+                            variant="warning"
                             onClick={this.handleSubmit}
                             
                            >
-                            Add
+                            Save
                         </Button>
                         <Button
                             onClick={this.props.onClose}
@@ -88,22 +87,16 @@ class NewTask extends Component {
                         </Button>
                     </Modal.Footer>
                 </Modal>
-
-
-
-
-
-
-
-
             </>
         );
     }
 
 }
 
-NewTask.propTypes = {
-    addNewTaskFunc: PropTypes.func.isRequired,
+EditTask.propTypes = {
+    onClose: PropTypes.func.isRequired,
+    onSave: PropTypes.func.isRequired,
+    data: PropTypes.object.isRequired,
 
 }
-export default NewTask;
+export default EditTask;

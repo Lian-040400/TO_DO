@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 function Confirm(props) {
     return(
-        <>
+      
         <Modal
       
       size="md"
@@ -22,7 +22,7 @@ function Confirm(props) {
         <Button
             variant="danger"
             onClick={props.deleteAllTasks}
-            onHide={props.onHideModal}>
+            >
                 Delete
          </Button>
         <Button
@@ -33,7 +33,7 @@ function Confirm(props) {
       </Modal.Footer>
     </Modal>
  
-        </>
+       
     );
     
 }
