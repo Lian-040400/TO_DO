@@ -1,40 +1,33 @@
 import React, { Component } from "react";
-import { Container, Col, Row, FormControl, InputGroup, Button, Card } from "react-bootstrap";
+import { Container, Col, Row, Button } from "react-bootstrap";
+import Task from "../task/Task";
+import NewTask from "../newTask/NewTask";
 import styles from "./toDo.module.css";
-import idGenerator from "../../additional_function/idGenerator"
+import { Confirm } from "../confirm/Confirm";
+import EditTask from "../editTask/EditTask";
 class ToDo extends Component {
 
     state = {
-        inputValue: "",
         tasks: [],
-        checked:false,
-        selectedTasks:new Set(),
+        selectedTasks: new Set(),
+        show:false,
+        checked:true,
+        openNewTaskModal:false,
+        openEditTaskModal:null,
     };
 
-    addTasks = () => {
-        let inputValue = this.state.inputValue.trim();
-        if (!inputValue) {
-            return;
-        }
-        let task = {
-            _id: idGenerator(),
-            title: inputValue,
-        }
+    addTasks = (task) => {
+
         let tasks = [...this.state.tasks, task];
         this.setState({
-            inputValue: "",
             tasks,
+            openNewTaskModal:false,
+            openEditTaskModal:null,
         });
 
     };
 
-    handleChange = (event) => {
 
-        this.setState({
-            inputValue: event.target.value,
-        });
-
-    };
     deleteTask = (taskId) => {
         let tasks = this.state.tasks.filter(task => {
             return taskId !== task._id;
@@ -43,124 +36,207 @@ class ToDo extends Component {
             tasks,
         });
 
-    }
+    };
 
-    deleteSelectedTasks=()=>{
-        const {tasks,selectedTasks}=this.state;
-        const newTasks=tasks.filter((task)=>!selectedTasks.has(task._id));
+    editTask=(editTask)=>{
+      this.setState({
+        openEditTaskModal:editTask,
+      })
+    };
+    saveTask=(editedTask)=>{
+        const {tasks}=this.state;
+       const editedTaskIndex=tasks.findIndex((ell,index,array)=>{return ell._id===editedTask._id});
+        tasks[editedTaskIndex]=editedTask;
         this.setState({
-            tasks:newTasks,
-            selectedTasks:new Set(),
+            tasks,
+            openEditTaskModal:null,
+
         });
     }
 
-    handleCheck=(taskId)=>{
-        let {selectedTasks}=this.state;
-        
-            if (selectedTasks.has(taskId)) {
-                selectedTasks.delete(taskId);
-            }
-            else {
-                selectedTasks.add(taskId);
-            }
-            this.setState({
-                selectedTasks,
-            });
-    }
-    handleKeyDawn=(event)=>{
+    deleteSelectedTasks = () => {
+        const { tasks, selectedTasks } = this.state;
+        const newTasks = tasks.filter((task) => !selectedTasks.has(task._id));
+        this.setState({
+            tasks: newTasks,
+            selectedTasks: new Set(),
+            show:!this.state.show,
+           
+        });
+    };
 
-        if(event.key==="Enter"){
-           this.addTasks();
+    handleCheck = (taskId) => {
+        let { selectedTasks } = this.state;
+
+        if (selectedTasks.has(taskId)) {
+            selectedTasks.delete(taskId);
+            
         }
+        else {
+            selectedTasks.add(taskId);
+           
+        }
+        this.setState({
+            selectedTasks,
+   
+        });
+    };
+    closeModal=()=>{
+        this.setState({
+            show:!this.state.show,
+        });
+    };
+
+    togglAllTasks=(type)=>{
+
+        let selectedTasks;
+        if(type==="select"){
+         selectedTasks=this.state.tasks.map((task)=>{
+            return task._id;
+
+        });
+}
+else{
+    selectedTasks=[];
+    
+        }
+        this.setState({
+            selectedTasks:new Set(selectedTasks),
+        });
+        
+    };
+
+    toggleNewTaskMOdal=()=>{
+        this.setState({
+            openNewTaskModal:!this.state.openNewTaskModal
+        })
     }
+
+
 
     render() {
-        const { inputValue, tasks } = this.state;
+        const { tasks,selectedTasks,checked,openNewTaskModal,openEditTaskModal } = this.state;
         let taskComponent = tasks.map((task) => {
+
             return (
                 <Col key={task._id}
                     xs={12}
                     sm={6}
                     md={4}
                     xl={3}>
-                    <div>
-                        <Card className={styles.task}>
-                            <Card.Body>
-                                <InputGroup className="mb-3">
-                                    <InputGroup.Prepend>
-                                        <InputGroup.Checkbox
-                                         defaultChecked={false}
-                                         onChange={()=>this.handleCheck(task._id)}
-                                         
-                                          />
-                                    </InputGroup.Prepend>
-                                </InputGroup>
-                                <Card.Title>{task.title}</Card.Title>
-                                <Card.Text>
-                                    Some quick example text to build on the card title and make up the bulk of
-                                    the card's content.
-                                </Card.Text>
-                                <Button
-                               
-                                    variant="danger"
-                                    onClick={() => (this.deleteTask(task._id))}
-                                    disabled={!!this.state.selectedTasks.size}>
-                                    Delete
-                                </Button>
-                            </Card.Body>
-                        </Card>
 
-                    </div>
+                    <Task data={task}
+                        onHandleCheck={this.handleCheck}
+                        onDeleteTask={this.deleteTask}
+                        onEditTask={this.editTask}
+                        addNewTasks={this.addTasks}
+                        disabled={!!this.state.selectedTasks.size}
+                        checked={selectedTasks.has(task._id) &&checked }
+                    />
                 </Col>
-            )
-        })
+            );
+        });
 
         return (
             <>
-            <h2>To Do Lists</h2>
+                
                 <Container>
-                    <Row className="justify-content-center">
+                <Row className="justify-content-center">
                         <Col
-                        
-                         xs={8}
-                         >
-                            <InputGroup>
-                                <FormControl
-                                    placeholder="Add your task"
-                                    value={inputValue}
-                                    onChange={this.handleChange}
-                                     onKeyDown={this.handleKeyDawn}
-                                />
-                                <InputGroup.Append>
-                                    <Button
-                                    disabled={!!this.state.selectedTasks.size}
-                                        onClick={this.addTasks} 
-                                        >
-                                            
-                                        Add task
-                                </Button>
-                                </InputGroup.Append>
-                            </InputGroup>
+                           lg={2} 
+                        >
+                            <h2>To Do List</h2>
                         </Col>
-                    </Row>
-                    <Row  className="justify-content-center">
+                </Row>
+                <Row className="justify-content-center">
+                    <Col
+                         xs={8}
+                         sm={6}
+                         md={3}
+                    >
+                        <Button
+                                variant="success"
+                                onClick={this.toggleNewTaskMOdal}  
+                                className={styles.deleteAllSelectedTasksButton}  
+                            >
+                               Add new task
+                                 </Button>
+                                 
+                        </Col>
+
+                    <Col
+                         xs={8}
+                         sm={6}
+                         md={3}>
+
+                        <Button
+                              
+                                variant="warning"
+                                className={styles.deleteAllSelectedTasksButton}
+                                onClick={()=>this.togglAllTasks("select")}
+                                hidden={(!tasks.length)}
+                            >
+                                Select All Tasks
+                                 </Button>
+                                 
+                        </Col>
                         <Col
-                          xs={2}>
-                    <Button
-                     hidden={!this.state.selectedTasks.size}
-                                    className={styles.deleteAllSelectedTasksButton}
-                                    variant="danger"
-                                    onClick={this.deleteSelectedTasks}
-                                        >
-                                        Delete all selected tasks
+                         xs={8}
+                         sm={6}
+                         md={3}>
+
+                        <Button
+                              
+                                variant="warning"
+                                className={styles.deleteAllSelectedTasksButton}
+                                onClick={()=>this.togglAllTasks("deselect")}
+                                hidden={!selectedTasks.size}
+                            >
+                                Deselect All selected Tasks
+                                 </Button>
+                                 
+                        </Col>
+
+                        <Col
+                            xs={8}
+                            sm={6}
+                            md={3}>
+                            <Button
+                                hidden={!selectedTasks.size}
+                                className={styles.deleteAllSelectedTasksButton}
+                                variant="danger"
+                                onClick={this.closeModal}
+                            >
+                                Delete all selected tasks
                         </Button>
                         </Col>
-                 </Row>                    
+                    </Row>
                     <Row>
                         {taskComponent}
                     </Row>
                 </Container>
+
+              { checked&&  <Confirm
+                 confirmValue={this.state.show}
+                 onHideModal={this.closeModal}
+                 deleteAllTasks={this.deleteSelectedTasks}
+                 tasksCount={selectedTasks.size}/>   }
+
+                 {openNewTaskModal&& <NewTask
+                onClose={this.toggleNewTaskMOdal}
+                addNewTaskFunc={this.addTasks} 
+                               />
+                }
+
+                 {openEditTaskModal&& <EditTask
+                 data={openEditTaskModal}
+                onClose={()=>this.editTask(null)}
+                onSave={this.saveTask} 
+                />}
+
+
             </>
+ 
         );
     }
 
