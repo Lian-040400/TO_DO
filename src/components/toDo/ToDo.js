@@ -5,6 +5,7 @@ import NewTask from "../newTask/NewTask";
 import styles from "./toDo.module.css";
 import { Confirm } from "../confirm/Confirm";
 import EditTask from "../editTask/EditTask";
+import { faTachometerAlt } from "@fortawesome/free-solid-svg-icons";
 class ToDo extends Component {
 
     state = {
@@ -17,52 +18,158 @@ class ToDo extends Component {
     };
 
     addTasks = (task) => {
+       fetch('http://localhost:3001/task',{
+           method:'Post',
+           body:JSON.stringify(task),
+           headers:{
+            "Content-Type": "application/json"  
+           }
+       })
+       .then(async(response)=>{
+           const res=await response.json();
+          if(response.status>=400&&response.status<600){
+              if(res.error){
+                throw res.error;
+              }
+              else{
+                  throw new Error("Something went wrong!!!!!!")
+              }
+          }
+           let tasks = [...this.state.tasks, res];
+           this.setState({
+               tasks,
+               openNewTaskModal:false,
+               openEditTaskModal:null,
+           });
+       })
+       .catch((error)=>{
+           console.log(error);
+       });
 
-        let tasks = [...this.state.tasks, task];
-        this.setState({
-            tasks,
-            openNewTaskModal:false,
-            openEditTaskModal:null,
-        });
+        
 
     };
 
 
     deleteTask = (taskId) => {
-        let tasks = this.state.tasks.filter(task => {
+        fetch('http://localhost:3001/task/'+taskId,{
+           method:'Delete',
+           headers:{
+            "Content-Type": "application/json"  
+           }
+       })
+       .then(async(response)=>{
+           const res=await response.json();
+          if(response.status>=400&&response.status<600){
+              if(res.error){
+                throw res.error;
+              }
+              else{
+                  throw new Error("Something went wrong!!!!!!")
+              }
+          }
+          let tasks = this.state.tasks.filter(task => {
             return taskId !== task._id;
         })
         this.setState({
             tasks,
         });
+       })
+       .catch((error)=>{
+           console.log(error);
+       });
+
+
+
+
+
+
+       
 
     };
 
     editTask=(editTask)=>{
+        
       this.setState({
         openEditTaskModal:editTask,
       })
     };
     saveTask=(editedTask)=>{
-        const {tasks}=this.state;
-       const editedTaskIndex=tasks.findIndex((ell,index,array)=>{return ell._id===editedTask._id});
-        tasks[editedTaskIndex]=editedTask;
-        this.setState({
-            tasks,
-            openEditTaskModal:null,
+       
 
+        fetch('http://localhost:3001/task/'+editedTask._id,{
+            method:'Put',
+            body:JSON.stringify(editedTask),
+            headers:{
+             "Content-Type": "application/json"  
+            }
+        })
+        .then(async(response)=>{
+            const res=await response.json();
+           if(response.status>=400&&response.status<600){
+               if(res.error){
+                 throw res.error;
+               }
+               else{
+                   throw new Error("Something went wrong!!!!!!")
+               }
+           }
+           const {tasks}=this.state;
+           const editedTaskIndex=tasks.findIndex((ell,index,array)=>{return ell._id===editedTask._id});
+           tasks[editedTaskIndex]=res;
+           this.setState({
+               tasks,
+               openEditTaskModal:null,
+   
+           });
+        })
+        .catch((error)=>{
+            console.log(error);
         });
+ 
+        
     }
 
     deleteSelectedTasks = () => {
+        
         const { tasks, selectedTasks } = this.state;
-        const newTasks = tasks.filter((task) => !selectedTasks.has(task._id));
-        this.setState({
-            tasks: newTasks,
-            selectedTasks: new Set(),
-            show:!this.state.show,
-           
+
+
+        fetch('http://localhost:3001/task',{
+            method:'PATCH',
+            body:JSON.stringify({tasks:[...selectedTasks]}),
+            headers:{
+             "Content-Type": "application/json"  
+            }
+        })
+        .then(async(response)=>{
+            const res=await response.json();
+           if(response.status>=400&&response.status<600){
+               if(res.error){
+                 throw res.error;
+               }
+               else{
+                   throw new Error("Something went wrong!!!!!!")
+               }
+           }
+           const newTasks = tasks.filter((task) => !selectedTasks.has(task._id));
+           this.setState({
+               tasks: newTasks,
+               selectedTasks: new Set(),
+               show:!this.state.show,
+              
+           });
+        })
+        .catch((error)=>{
+            console.log(error);
         });
+
+
+
+
+
+
+        
     };
 
     handleCheck = (taskId) => {
@@ -111,7 +218,37 @@ else{
             openNewTaskModal:!this.state.openNewTaskModal
         })
     }
+    componentDidMount(){
 
+        fetch('http://localhost:3001/task',{
+           method:'Get',
+           headers:{
+            "Content-Type": "application/json"  
+           }
+       })
+       .then(async(response)=>{
+           const res=await response.json();
+          if(response.status>=400&&response.status<600){
+              if(res.error){
+                throw res.error;
+              }
+              else{
+                  throw new Error("Something went wrong!!!!!!")
+              }
+          }
+          
+           this.setState({
+               tasks:res,
+              
+           });
+       })
+       .catch((error)=>{
+           console.log(error);
+       });
+
+        
+
+    }
 
 
     render() {
