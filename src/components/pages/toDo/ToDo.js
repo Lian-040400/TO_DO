@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Container, Col, Row, Button } from "react-bootstrap";
-import Task from "../task/Task";
-import NewTask from "../newTask/NewTask";
+import Task from "../../task/Task";
+import NewTask from "../../newTask/NewTask";
 import styles from "./toDo.module.css";
-import { Confirm } from "../confirm/Confirm";
-import EditTask from "../editTask/EditTask";
+import { Confirm } from "../../confirm/Confirm";
+import EditTask from "../../editTask/EditTask";
 import { faTachometerAlt } from "@fortawesome/free-solid-svg-icons";
 
 class ToDo extends Component {
@@ -283,7 +283,7 @@ else{
                         <Col
                            lg={2} 
                         >
-                            <h2>To Do List</h2>
+                            
                         </Col>
                 </Row>
                 <Row className="justify-content-center">

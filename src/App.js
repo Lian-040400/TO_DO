@@ -1,28 +1,52 @@
 import React from 'react';
 import './App.css';
-// import { Product } from './Product.js';
-import ToDo from './components/toDo/ToDo.js';
-// import Message from './Message.js';
+import ToDo from './components/pages/toDo/ToDo';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import {BrowserRouter,Route,Switch,Redirect} from 'react-router-dom';
+import {NavBar} from './components/NavBar/NavBar';
+import {NotFound} from "./components/pages/404/404";
+import { Contact } from "./components/pages/contact/Contact";
+import { About } from "./components/pages/about/About";
 function App() {
   return (
-    // <div className="App">
-    //   <header className="App-header">
-    //     {/* <Message message="Hello every one"/> */}
-    //      {/* <Product
-    //       name="Bananas "
-    //       price="1$"
-    //       description=" Fresh bananas from Ecuador!!"
-    //     /> */}
-
-
-
-    //   </header>
-    // </div>
     <>
-      <ToDo></ToDo>
+   
+   <BrowserRouter>
+   <NavBar/>
+   <Switch>
+   <Route
+   path='/home'
+   component={ToDo}
+   exact
+   />
 
+<Route
+   path='/about'
+   component={About}
+   exact
+   />
+   <Route
+   path='/contact'
+   component={Contact}
+   exact
+   />
+
+   <Route
+   path='/'
+   component={ToDo}
+   exact
+   />
+   <Route
+   path='/notFound'
+   component={NotFound}
+   exact
+   />
+   <Redirect
+   to="/NotFound"
+  
+   />
+      </Switch>
+   </BrowserRouter>
     </>
 
   );
