@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import { InputGroup, Button, Card } from "react-bootstrap";
 import styles from "./task.module.css";
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash,faEdit } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash,faEdit } from '@fortawesome/free-solid-svg-icons';
+import sliceDate from '../../additional_function/slice';
 
 class Task extends Component {
 
@@ -32,8 +33,11 @@ class Task extends Component {
                     </InputGroup>
                     <Card.Title>{task.title}</Card.Title>
                     <Card.Text>
-                       {task.description}
-                                </Card.Text>
+                      Description: {task.description}
+                    </Card.Text>
+                    <Card.Text>
+                      Date: {sliceDate(task.date) }
+                    </Card.Text>
                     <Button
                         variant="warning"
                         onClick={() => onEditTask(task)}

@@ -1,23 +1,28 @@
 import React, { Component } from "react";
-import { FormControl,  Button, Modal, Form } from "react-bootstrap";
+import { FormControl, Button, Modal, Form } from "react-bootstrap";
 import PropTypes from 'prop-types';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import sliceDate from '../../additional_function/slice';
+
 class EditTask extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state={
+        this.state = {
             ...props.data,
+            date:new Date(props.data.date)
         };
     }
-   
+
 
     handleChange = (event) => {
-        const {name,value}=event.target;
+        const { name, value } = event.target;
         this.setState({
             [name]: value,
 
-    });
-};
+        });
+    };
 
     handleSubmit = () => {
 
@@ -27,12 +32,18 @@ class EditTask extends Component {
             return;
         }
         this.props.onSave({
-            _id:this.state._id,
+            _id: this.state._id,
             title,
             description,
+           date:sliceDate(this.state.date.toISOString()),
+
         });
     };
-
+    handleChangeDate=(date)=>{
+        this.setState({
+           date:date ||new Date(),
+       });
+   }
 
     render() {
         return (
@@ -48,7 +59,7 @@ class EditTask extends Component {
                 >
                     <Modal.Header closeButton>
                         <Modal.Title id="contained-modal-title-vcenter">
-                           Edit Task
+                            Edit Task
                          </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
@@ -56,19 +67,25 @@ class EditTask extends Component {
                             placeholder="Title"
                             name="title"
                             value={this.state.title}
-                             onChange={this.handleChange}
-                            
+                            onChange={this.handleChange}
+
                         />
 
                         <Form.Group controlId="exampleForm.ControlTextarea1">
 
-                            <Form.Control 
-                            as="textarea" rows={3} 
-                           name="description"
-                            value={this.state.description}
-                            placeholder="Description"
-                             onChange={this.handleChange}
-                             className="mt-3"/>
+                            <Form.Control
+                                as="textarea" rows={3}
+                                name="description"
+                                value={this.state.description}
+                                placeholder="Description"
+                                onChange={this.handleChange}
+                                className="mt-3" />
+
+                            <DatePicker
+                                minDate={new Date()}
+                                selected={this.state.date}
+                                onChange={this.handleChangeDate}
+                            />
                         </Form.Group>
 
                     </Modal.Body>
@@ -76,8 +93,8 @@ class EditTask extends Component {
                         <Button
                             variant="warning"
                             onClick={this.handleSubmit}
-                            
-                           >
+
+                        >
                             Save
                         </Button>
                         <Button
