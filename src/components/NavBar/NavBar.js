@@ -15,19 +15,19 @@ export function NavBar() {
                     <NavLink to="/"
                     className={styles.linkStyles}
                     activeClassName={styles.active}
-                    exact
+                    exact={true}
                     >Home
                     </NavLink></Col>
                     <Col>
                     <NavLink to="/about"
                     className={styles.linkStyles}
                     activeClassName={styles.active}
-                    exect>About</NavLink></Col>
+                    exact>About</NavLink></Col>
                     <Col>
                     <NavLink to="/contact"
                     className={styles.linkStyles}
                     activeClassName={styles.active}
-                    exect
+                    exact
                     >Contact</NavLink></Col>
                     </Row>
                     </Container>

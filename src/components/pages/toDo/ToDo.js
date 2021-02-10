@@ -5,7 +5,8 @@ import NewTask from "../../newTask/NewTask";
 import styles from "./toDo.module.css";
 import { Confirm } from "../../confirm/Confirm";
 import EditTask from "../../editTask/EditTask";
-import { faTachometerAlt } from "@fortawesome/free-solid-svg-icons";
+
+// import { faTachometerAlt } from "@fortawesome/free-solid-svg-icons";
 
 class ToDo extends Component {
 
