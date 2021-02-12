@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component,createRef } from "react";
 import { FormControl, Button, Modal, Form } from "react-bootstrap";
 // import idGenerator from "../../additional_function/idGenerator";
 import DatePicker from "react-datepicker";
@@ -7,13 +7,19 @@ import PropTypes from 'prop-types';
 import sliceDate from '../../additional_function/slice';
 
 class NewTask extends Component {
+    constructor(props){  
+        super(props);  
+        this.titleRef=createRef();
+   }  
 
     state = {
         title: "",
         description: "",
         date:new Date(),
     }
-
+    componentDidMount(){
+        this.titleRef.current.focus();
+    }
     handleChange = (event) => {
         const { name, value } = event.target;
         this.setState({
@@ -43,6 +49,7 @@ class NewTask extends Component {
             date:date ||new Date(),
         });
     }
+   
 
     render() {
 
@@ -68,7 +75,7 @@ class NewTask extends Component {
                             name="title"
                             value={this.state.title}
                             onChange={this.handleChange}
-
+                            ref={this.titleRef}
                         />
 
                         <Form.Group controlId="exampleForm.ControlTextarea1">
@@ -82,13 +89,11 @@ class NewTask extends Component {
                                 className="mt-3" />
 
 
-
                             <DatePicker
                                 minDate={new Date()}
                                 selected={this.state.date}
                                 onChange={this.handleChangeDate}
                             />
-
 
                         </Form.Group>
 
@@ -108,14 +113,6 @@ class NewTask extends Component {
                         </Button>
                     </Modal.Footer>
                 </Modal>
-
-
-
-
-
-
-
-
             </>
         );
     }
@@ -127,3 +124,8 @@ NewTask.propTypes = {
 
 }
 export default NewTask;
+
+
+
+
+

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component,createRef } from "react";
 import { FormControl, Button, Modal, Form } from "react-bootstrap";
 import PropTypes from 'prop-types';
 import DatePicker from "react-datepicker";
@@ -13,9 +13,14 @@ class EditTask extends Component {
             ...props.data,
             date:new Date(props.data.date)
         };
+        this.titleRef=createRef();
+            
+       
     }
 
-
+    componentDidMount(){
+        this.titleRef.current.focus();
+    }
     handleChange = (event) => {
         const { name, value } = event.target;
         this.setState({
@@ -68,7 +73,7 @@ class EditTask extends Component {
                             name="title"
                             value={this.state.title}
                             onChange={this.handleChange}
-
+                            ref={this.titleRef}
                         />
 
                         <Form.Group controlId="exampleForm.ControlTextarea1">
