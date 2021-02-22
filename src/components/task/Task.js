@@ -2,9 +2,11 @@ import React, { Component } from "react";
 import { InputGroup, Button, Card } from "react-bootstrap";
 import styles from "./task.module.css";
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash,faEdit } from '@fortawesome/free-solid-svg-icons'
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash,faEdit } from '@fortawesome/free-solid-svg-icons';
+import sliceDate from '../../additional_function/slice';
+import {Link} from 'react-router-dom';
+import {cutText} from '../../additional_function/cutText';
 class Task extends Component {
 
     
@@ -30,10 +32,14 @@ class Task extends Component {
                             />
                         </InputGroup.Prepend>
                     </InputGroup>
-                    <Card.Title>{task.title}</Card.Title>
+                   <Link
+                   to={`/task/${task._id}`}><Card.Title>{cutText(task.title,20)}</Card.Title></Link> 
                     <Card.Text>
-                       {task.description}
-                                </Card.Text>
+                      Description: {cutText(task.description,60)}
+                    </Card.Text>
+                    <Card.Text>
+                      Date: {sliceDate(task.date) }
+                    </Card.Text>
                     <Button
                         variant="warning"
                         onClick={() => onEditTask(task)}
