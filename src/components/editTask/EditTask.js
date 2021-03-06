@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import sliceDate from '../../additional_function/slice';
+import { connect } from "react-redux";
+import { editTask } from "../../additional_function/action";
 
 class EditTask extends Component {
 
@@ -36,7 +38,7 @@ class EditTask extends Component {
         if (!title) {
             return;
         }
-        this.props.onSave({
+        this.props.editTask({
             _id: this.state._id,
             title,
             description,
@@ -114,11 +116,12 @@ class EditTask extends Component {
     }
 
 }
-
+const mapDispatchToProps={
+    editTask,
+}
 EditTask.propTypes = {
     onClose: PropTypes.func.isRequired,
-    onSave: PropTypes.func.isRequired,
     data: PropTypes.object.isRequired,
 
 }
-export default EditTask;
+export default connect(null,mapDispatchToProps)(EditTask); 

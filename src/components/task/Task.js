@@ -7,6 +7,8 @@ import { faTrash,faEdit } from '@fortawesome/free-solid-svg-icons';
 import sliceDate from '../../additional_function/slice';
 import {Link} from 'react-router-dom';
 import {cutText} from '../../additional_function/cutText';
+import { deleteTask } from "../../additional_function/action";
+import { connect } from "react-redux";
 class Task extends Component {
 
     
@@ -19,8 +21,7 @@ class Task extends Component {
 
     render() {
         const task = this.props.data;
-        const { onDeleteTask,onEditTask, disabled,checked } = this.props;
-
+        const { onEditTask, disabled,checked } = this.props;
         return (
             <Card className={`${styles.tasks}  ${checked ? styles.selected : ""}`}>
                 <Card.Body>
@@ -50,7 +51,7 @@ class Task extends Component {
                     </Button>
                     <Button
                         variant="danger"
-                        onClick={() => onDeleteTask(task._id)}
+                        onClick={() => this.props.deleteTask(task._id)}
                         disabled={disabled}
                         className="m-1"
                     >
@@ -64,11 +65,13 @@ class Task extends Component {
         );
     }
 }
+
+const mapDispatchToProps={
+    deleteTask,
+}
 Task.propTypes={
     disabled:PropTypes.bool.isRequired,
-    onDeleteTask:PropTypes.func.isRequired,
-    addNewTasks:PropTypes.func.isRequired,
     onHandleCheck:PropTypes.func.isRequired,
 
 }
-export default Task;
+export default connect(null,mapDispatchToProps)(Task);
