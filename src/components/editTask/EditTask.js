@@ -5,7 +5,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import sliceDate from '../../additional_function/slice';
 import { connect } from "react-redux";
-import { editTask } from "../../additional_function/action";
+import { editTask } from "../store/action";
 
 class EditTask extends Component {
 

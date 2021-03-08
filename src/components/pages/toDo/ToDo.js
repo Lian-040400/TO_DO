@@ -5,9 +5,8 @@ import NewTask from "../../newTask/NewTask";
 import styles from "./toDo.module.css";
 import { Confirm } from "../../confirm/Confirm";
 import EditTask from "../../editTask/EditTask";
-import {getTasks,deleteTasks} from '../../../additional_function/action';
+import {getTasks,deleteTasks} from '../../store/action';
 import { connect } from "react-redux";
-
 class ToDo extends Component {
 
     state = {

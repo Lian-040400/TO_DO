@@ -4,7 +4,7 @@ import { FormControl, Button, Modal, Form } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import sliceDate from '../../additional_function/slice';
-import { addTasks } from '../../additional_function/action';
+import { addTasks } from '../store/action';
 import { connect } from "react-redux";
 class NewTask extends Component {
     constructor(props){  

@@ -7,7 +7,7 @@ import { faTrash,faEdit } from '@fortawesome/free-solid-svg-icons';
 import sliceDate from '../../additional_function/slice';
 import {Link} from 'react-router-dom';
 import {cutText} from '../../additional_function/cutText';
-import { deleteTask } from "../../additional_function/action";
+import { deleteTask } from "../store/action";
 import { connect } from "react-redux";
 class Task extends Component {
 

@@ -7,8 +7,11 @@ import {NavBar} from './components/NavBar/NavBar';
 import {NotFound} from "./components/pages/404/404";
 import { Contact } from "./components/pages/contact/Contact";
 import { About } from "./components/pages/about/About";
-import SinglTask from "./components/pages/singlTask/SinglTask"
-function App() {
+import SinglTask from "./components/pages/singlTask/SinglTask";
+import SpinnerForPending  from "./components/spinner/Spinner";
+import { connect } from "react-redux";
+
+function App({loader}) {
   return (
     <>
    
@@ -52,10 +55,20 @@ function App() {
    exact={true}
    />
       </Switch>
-   </BrowserRouter>
+   </BrowserRouter> 
+
+   {loader &&<SpinnerForPending/>}
     </>
+   
 
   );
 }
 
-export default App;
+const mapStateToProps=(state)=>{
+  return{
+     loader:state.loader,
+  }
+
+}
+
+export default connect(mapStateToProps)(App);
