@@ -4,40 +4,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash,faEdit } from '@fortawesome/free-solid-svg-icons';
 import sliceDate from '../../../additional_function/slice';
 import EditTask from "../../editTask/EditTask";
+import { connect } from "react-redux";
+import { getTask } from "../../store/action";
 
-export default class SinglTask extends Component {
+class SinglTask extends Component {
     state = {
-        task: null,
         openModal:false,
     };
     componentDidMount() {
         const taskId = this.props.match.params.taskId;
+        this.props.getTask(taskId);
 
-        fetch(`http://localhost:3001/task/${taskId}`, {
-            method: 'Get',
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-            .then(async (response) => {
-                const res = await response.json();
-                if (response.status >= 400 && response.status < 600) {
-                    if (res.error) {
-                        throw res.error;
-                    }
-                    else {
-                        throw new Error("Something went wrong!!!!!!")
-                    }
-                }
-
-                this.setState({
-                    task: res,
-
-                });
-            })
-            .catch((error) => {
-                console.log(error);
-            });
     }
 
 
@@ -74,37 +51,48 @@ export default class SinglTask extends Component {
             openModal: ! this.state.openModal
         });
     }
-    saveTask=(editedTask)=>{
-        fetch('http://localhost:3001/task/'+editedTask._id,{
-            method:'Put',
-            body:JSON.stringify(editedTask),
-            headers:{
-             "Content-Type": "application/json"  
-            }
-        })
-        .then(async(response)=>{
-            const res=await response.json();
-           if(response.status>=400&&response.status<600){
-               if(res.error){
-                 throw res.error;
-               }
-               else{
-                   throw new Error("Something went wrong!!!!!!")
-               }
-           }
+    // saveTask=(editedTask)=>{
+    //     fetch('http://localhost:3001/task/'+editedTask._id,{
+    //         method:'Put',
+    //         body:JSON.stringify(editedTask),
+    //         headers:{
+    //          "Content-Type": "application/json"  
+    //         }
+    //     })
+    //     .then(async(response)=>{
+    //         const res=await response.json();
+    //        if(response.status>=400&&response.status<600){
+    //            if(res.error){
+    //              throw res.error;
+    //            }
+    //            else{
+    //                throw new Error("Something went wrong!!!!!!")
+    //            }
+    //        }
            
-           this.setState({
-               task:res,
-               openModal:false,
+    //        this.setState({
+    //            task:res,
    
-           });
-        })
-        .catch((error)=>{
-            console.log(error);
-        });
+    //        });
+    //     })
+    //     .catch((error)=>{
+    //         console.log(error);
+    //     });
+    // }
+
+    componentDidUpdate(prevProps){
+        if(!prevProps.editsingleTaskSuccess&&this.props.editsingleTaskSuccess){
+            this.setState({
+               openModal:false,
+            });
+            return;
+        }
+       
+
     }
     render() {
-        const {task,openModal}=this.state
+        const {openModal}=this.state
+        const {task}=this.props
         return(
             <div>
               { task?
@@ -152,7 +140,7 @@ export default class SinglTask extends Component {
                     <EditTask
                     data={task}
                 onClose={this.onToggleModal}
-                onSave={this.saveTask} 
+                from={'singl'}
                 />
                  
               
@@ -164,3 +152,16 @@ export default class SinglTask extends Component {
         );
         }
     };
+
+    const mapStateToProps=(state)=>{
+        return{
+            task:state.task,
+            editsingleTaskSuccess:state.editsingleTaskSuccess,
+        }
+    
+    }
+    const mapDispatchToProps={
+        getTask,
+    }
+
+    export default connect(mapStateToProps,mapDispatchToProps)(SinglTask);

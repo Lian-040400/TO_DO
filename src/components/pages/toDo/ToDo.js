@@ -225,7 +225,6 @@ else{
                  {openEditTaskModal&& <EditTask
                  data={openEditTaskModal}
                 onClose={()=>this.editTask(null)}
-                // onSave={this.saveTask} 
                 />}
 
 

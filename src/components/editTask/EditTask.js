@@ -44,7 +44,7 @@ class EditTask extends Component {
             description,
            date:sliceDate(this.state.date.toISOString()),
 
-        });
+        },this.props.from);
     };
     handleChangeDate=(date)=>{
         this.setState({
