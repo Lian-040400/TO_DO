@@ -2,7 +2,7 @@ import React,{useEffect} from 'react';
 import './App.css';
 import ToDo from './components/pages/toDo/ToDo';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {BrowserRouter,Route,Switch,Redirect} from 'react-router-dom';
+import {Router,Route,Switch,Redirect} from 'react-router-dom';
 import {NavBar} from './components/NavBar/NavBar';
 import {NotFound} from "./components/pages/404/404";
 import { Contact } from "./components/pages/contact/Contact";
@@ -12,6 +12,7 @@ import SpinnerForPending  from "./components/spinner/Spinner";
 import { connect } from "react-redux";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {  history} from "./additional_function/history";
 
 function App(props) {
   const {loader,successMessage,errorMessage}=props;
@@ -45,7 +46,7 @@ function App(props) {
   return (
     <>
    
-   <BrowserRouter>
+   <Router history={history}>
    <NavBar/>
    <Switch>
    <Route
@@ -85,7 +86,7 @@ function App(props) {
    exact={true}
    />
       </Switch>
-   </BrowserRouter> 
+   </Router> 
 
    {loader &&<SpinnerForPending/>}
    <ToastContainer/>

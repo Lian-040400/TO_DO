@@ -31,7 +31,7 @@ export function Contact() {
       }
      
       if(name==="email"&& value ){
-        const errorRegExp=/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+        const errorRegExp=/^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/;
         if(!errorRegExp.test(value)){
             setErrors({
             ...errors,

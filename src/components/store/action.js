@@ -1,9 +1,12 @@
 import  request  from "../../additional_function/request";
 import * as action_type from './action_type';
-export function getTasks(){
-
+import {history} from '../../additional_function/history';
+export function getTasks(params={}){
+    const query=Object.entries(params).map(([key,value])=>`${key}=${value}`).join('&');
+console.log(query);
     return(dispatch)=>{
-        request('http://localhost:3001/task')
+
+        request(`http://localhost:3001/task?${query}`)
         .then((tasks)=>{
              dispatch({type:action_type.GET_TASKS,tasks});
         })
@@ -40,12 +43,16 @@ export function addTasks(newTask){
 
 
 }
-export function deleteTask(deletedTaskId){
+export function deleteTask(deletedTaskId,from){
     return(dispatch)=>{
         dispatch({type:action_type.PENDING});
         request('http://localhost:3001/task/'+deletedTaskId,'DELETE')
         .then(()=>{
-            dispatch({type:action_type.DELETED_TASK,deletedTaskId})
+           
+            dispatch({type:action_type.DELETED_TASK,deletedTaskId,from});
+             if(from==="single"){
+                history.push("/");
+            }
         })
          .catch((error)=>{
             dispatch({type:action_type.ERROR, error:error.message});
