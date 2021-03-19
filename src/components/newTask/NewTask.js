@@ -3,9 +3,9 @@ import { FormControl, Button, Modal, Form } from "react-bootstrap";
 // import idGenerator from "../../additional_function/idGenerator";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import PropTypes from 'prop-types';
 import sliceDate from '../../additional_function/slice';
-
+import { addTasks } from '../store/action';
+import { connect } from "react-redux";
 class NewTask extends Component {
     constructor(props){  
         super(props);  
@@ -20,6 +20,7 @@ class NewTask extends Component {
     componentDidMount(){
         this.titleRef.current.focus();
     }
+   
     handleChange = (event) => {
         const { name, value } = event.target;
         this.setState({
@@ -27,6 +28,7 @@ class NewTask extends Component {
 
         });
     };
+    
 
     handleSubmit = () => {
 
@@ -41,7 +43,7 @@ class NewTask extends Component {
             description,
             date:sliceDate(date.toISOString()),
         }
-        this.props.addNewTaskFunc(task);
+        this.props.addTasks(task);
     };
 
     handleChangeDate=(date)=>{
@@ -118,13 +120,10 @@ class NewTask extends Component {
     }
 
 }
-
-NewTask.propTypes = {
-    addNewTaskFunc: PropTypes.func.isRequired,
-
+const mapDispatchToProps={
+    addTasks,
 }
-export default NewTask;
-
+export default connect(null,mapDispatchToProps)(NewTask);
 
 
 

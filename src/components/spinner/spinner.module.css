@@ -1,0 +1,18 @@
+.spinnerContainerStyles{
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.527);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    z-index: 99999;
+    
+}
+.spinnerStyles{
+    color: rgba(83, 154, 247, 0.719);
+    width: 5em;
+    height: 5em;
+    
+}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import './App.css';
 import ToDo from './components/pages/toDo/ToDo';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -7,8 +7,41 @@ import {NavBar} from './components/NavBar/NavBar';
 import {NotFound} from "./components/pages/404/404";
 import { Contact } from "./components/pages/contact/Contact";
 import { About } from "./components/pages/about/About";
-import SinglTask from "./components/pages/singlTask/SinglTask"
-function App() {
+import SinglTask from "./components/pages/singlTask/SinglTask";
+import SpinnerForPending  from "./components/spinner/Spinner";
+import { connect } from "react-redux";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+function App(props) {
+  const {loader,successMessage,errorMessage}=props;
+  useEffect(()=>{
+    if(successMessage){
+     toast.success(successMessage,{
+      position: "bottom-left",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      });
+   
+    } 
+    if(errorMessage){
+      toast.error(errorMessage, {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        });
+    
+     } 
+    
+},[successMessage,errorMessage]);
   return (
     <>
    
@@ -52,10 +85,23 @@ function App() {
    exact={true}
    />
       </Switch>
-   </BrowserRouter>
+   </BrowserRouter> 
+
+   {loader &&<SpinnerForPending/>}
+   <ToastContainer/>
     </>
+   
 
   );
 }
 
-export default App;
+const mapStateToProps=(state)=>{
+  return{
+     loader:state.loader,
+     successMessage:state.successMessage,
+     errorMessage:state.errorMessage,
+  }
+
+}
+
+export default connect(mapStateToProps)(App);
