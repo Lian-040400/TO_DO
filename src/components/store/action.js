@@ -1,12 +1,15 @@
 import  request  from "../../additional_function/request";
 import * as action_type from './action_type';
 import {history} from '../../additional_function/history';
+
+const apiHost=process.env.REACT_APP_API_HOST;
+
 export function getTasks(params={}){
     const query=Object.entries(params).map(([key,value])=>`${key}=${value}`).join('&');
 console.log(query);
     return(dispatch)=>{
 
-        request(`http://localhost:3001/task?${query}`)
+        request(`${apiHost}?${query}`)
         .then((tasks)=>{
              dispatch({type:action_type.GET_TASKS,tasks});
         })
@@ -19,7 +22,7 @@ console.log(query);
 export function getTask(taskId){
 
     return(dispatch)=>{
-        request(`http://localhost:3001/task/${taskId}`)
+        request(`${apiHost}/${taskId}`)
         .then((task)=>{
              dispatch({type:action_type.GET_TASK,task});
         })
@@ -32,7 +35,7 @@ export function getTask(taskId){
 export function addTasks(newTask){
     return(dispatch)=>{
         dispatch({type:action_type.PENDING});
-        request('http://localhost:3001/task','Post',newTask)
+        request(`${apiHost}`,'Post',newTask)
         .then((task)=>{
             dispatch({type:action_type.ADD_TASKS,task:task})
         })
@@ -46,7 +49,7 @@ export function addTasks(newTask){
 export function deleteTask(deletedTaskId,from){
     return(dispatch)=>{
         dispatch({type:action_type.PENDING});
-        request('http://localhost:3001/task/'+deletedTaskId,'DELETE')
+        request(`${apiHost}`+deletedTaskId,'DELETE')
         .then(()=>{
            
             dispatch({type:action_type.DELETED_TASK,deletedTaskId,from});
@@ -64,7 +67,7 @@ export function deleteTask(deletedTaskId,from){
 export function deleteTasks(deletedTaskId){
     return(dispatch)=>{
         dispatch({type:action_type.PENDING});
-        request('http://localhost:3001/task','PATCH',{tasks:[...deletedTaskId]})
+        request(`${apiHost}`,'PATCH',{tasks:[...deletedTaskId]})
         .then(()=>{
             dispatch({type:action_type.DELETED_TASKS,deletedTaskId})
         })
@@ -77,7 +80,7 @@ export function deleteTasks(deletedTaskId){
 export function editTask(data,from){
     return(dispatch)=>{
         dispatch({type:action_type.PENDING});
-        request('http://localhost:3001/task/'+data._id,'PUT',data)
+        request(`${apiHost}`+data._id,'PUT',data)
         .then((editedTask)=>{
             dispatch({type:action_type.EDITED_TASK,editedTask,from})
         })
