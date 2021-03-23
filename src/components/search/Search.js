@@ -3,8 +3,10 @@ import { connect } from "react-redux";
 import { getTasks } from "../store/action";
 import { InputGroup, FormControl, Button, Container, Row } from "react-bootstrap";
 
-function Search({ getTasks }) {
+function Search({getTasks}) {
+
    const [search, setSearch] = useState('');
+   
    const handleSubmit = () => {
       const params = {
          search,

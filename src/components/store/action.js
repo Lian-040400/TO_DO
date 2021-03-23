@@ -6,7 +6,7 @@ const apiHost=process.env.REACT_APP_API_HOST;
 
 export function getTasks(params={}){
     const query=Object.entries(params).map(([key,value])=>`${key}=${value}`).join('&');
-console.log(query);
+
     return(dispatch)=>{
 
         request(`${apiHost}?${query}`)

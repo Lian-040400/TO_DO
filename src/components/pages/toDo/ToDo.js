@@ -87,12 +87,12 @@ else{
         this.setState({
             openSortAndFilterModal:!this.state.openSortAndFilterModal,
         })
-        console.log(this.state.openSortAndFilterModal);
+       
 
     };
 
     componentDidMount(){
-        this.props.getTasks()
+        this.props.getTasks();
 
     };
     componentDidUpdate(prevProps){
@@ -102,6 +102,7 @@ else{
             });
             return;
         }
+        
         if(!prevProps.editTaskSuccess&&this.props.editTaskSuccess){
             this.setState({
                 openEditTaskModal:false,
@@ -248,9 +249,9 @@ else{
                  data={openEditTaskModal}
                 onClose={()=>this.editTask(null)}
                 />}
-               {<SortAndFilterModal
+               {openSortAndFilterModal&& <SortAndFilterModal
               onClose={this.toggleSortAndFilterModal}
-              show={openSortAndFilterModal}
+            //  show={}
                 />
                }
             </>

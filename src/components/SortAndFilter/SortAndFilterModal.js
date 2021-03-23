@@ -142,11 +142,12 @@ function SortAndFilterModal(props) {
       props.onClose();
 
    };
+   
     return (
         <>
             <Modal
-           
-                {...props}
+    show={true}
+         
                 size="xs"
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
@@ -219,9 +220,6 @@ function SortAndFilterModal(props) {
                     })}
                   
                     
-
-
-
                 </Modal.Body>
                 <Modal.Footer>
 
