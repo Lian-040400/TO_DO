@@ -7,6 +7,8 @@ import { Confirm } from "../../confirm/Confirm";
 import EditTask from "../../editTask/EditTask";
 import {getTasks,deleteTasks} from '../../store/action';
 import { connect } from "react-redux";
+import Search from '../../search/Search';
+import SortAndFilterModal from '../../SortAndFilter/SortAndFilterModal'
 class ToDo extends Component {
 
     state = {
@@ -15,6 +17,7 @@ class ToDo extends Component {
         checked:true,
         openNewTaskModal:false,
         openEditTaskModal:null,
+        openSortAndFilterModal:false,
     };
 
 
@@ -79,10 +82,17 @@ else{
         this.setState({
             openNewTaskModal:!this.state.openNewTaskModal,
         })
-    }
+    };
+    toggleSortAndFilterModal=()=>{
+        this.setState({
+            openSortAndFilterModal:!this.state.openSortAndFilterModal,
+        })
+       
+
+    };
 
     componentDidMount(){
-        this.props.getTasks()
+        this.props.getTasks();
 
     };
     componentDidUpdate(prevProps){
@@ -92,6 +102,7 @@ else{
             });
             return;
         }
+        
         if(!prevProps.editTaskSuccess&&this.props.editTaskSuccess){
             this.setState({
                 openEditTaskModal:false,
@@ -107,11 +118,11 @@ else{
                    return;
         }
 
-    }
+    };
 
 
     render() {
-        const { selectedTasks,checked,openNewTaskModal,openEditTaskModal } = this.state;
+        const { selectedTasks,checked,openNewTaskModal,openEditTaskModal,openSortAndFilterModal } = this.state;
         const{tasks}=this.props;
         let taskComponent = tasks.map((task) => {
 
@@ -136,13 +147,26 @@ else{
             <>
                 
                 <Container>
-                <Row className="justify-content-center">
-                        <Col
-                           lg={2} 
-                        >
-                            
+                    <Row>
+                        <Col lg="9">
+                    <Search/></Col>
+                    </Row>
+                    <Row className="justify-content-center">
+                    <Col
+                         xs={8}
+                         sm={6}
+                         md={3}
+                    >
+                        <Button
+                                variant="primary"
+                                onClick={this.toggleSortAndFilterModal}  
+                                className={styles.deleteAllSelectedTasksButton}  
+                            >
+                               Filter And Sort
+                        </Button>
+                                 
                         </Col>
-                </Row>
+                        </Row>
                 <Row className="justify-content-center">
                     <Col
                          xs={8}
@@ -155,9 +179,10 @@ else{
                                 className={styles.deleteAllSelectedTasksButton}  
                             >
                                Add new task
-                                 </Button>
+                        </Button>
                                  
                         </Col>
+                       
 
                     <Col
                          xs={8}
@@ -185,8 +210,7 @@ else{
                                 variant="warning"
                                 className={styles.deleteAllSelectedTasksButton}
                                 onClick={()=>this.togglAllTasks("deselect")}
-                                hidden={!selectedTasks.size}
-                            >
+                                hidden={!selectedTasks.size}>
                                 Deselect All selected Tasks
                                  </Button>
                                  
@@ -200,10 +224,9 @@ else{
                                 hidden={!selectedTasks.size}
                                 className={styles.deleteAllSelectedTasksButton}
                                 variant="danger"
-                                onClick={this.closeModal}
-                            >
+                                onClick={this.closeModal}>
                                 Delete all selected tasks
-                        </Button>
+                             </Button>
                         </Col>
                     </Row>
                     <Row>
@@ -226,8 +249,11 @@ else{
                  data={openEditTaskModal}
                 onClose={()=>this.editTask(null)}
                 />}
-
-
+               {openSortAndFilterModal&& <SortAndFilterModal
+              onClose={this.toggleSortAndFilterModal}
+            //  show={}
+                />
+               }
             </>
  
         );

@@ -5,7 +5,7 @@ import { faTrash,faEdit } from '@fortawesome/free-solid-svg-icons';
 import sliceDate from '../../../additional_function/slice';
 import EditTask from "../../editTask/EditTask";
 import { connect } from "react-redux";
-import { getTask } from "../../store/action";
+import { getTask,deleteTask } from "../../store/action";
 
 class SinglTask extends Component {
     state = {
@@ -19,31 +19,8 @@ class SinglTask extends Component {
 
 
     deleteTask=()=>{
-        const taskId=this.state.task._id;
-
-        fetch('http://localhost:3001/task/'+taskId,{
-           method:'Delete',
-           headers:{
-            "Content-Type": "application/json"  
-           }
-       })
-       .then(async(response)=>{
-           const res=await response.json();
-          if(response.status>=400&&response.status<600){
-              if(res.error){
-                throw res.error;
-              }
-              else{
-                  throw new Error("Something went wrong!!!!!!")
-              }
-          }
-         
-      this.props.history.push('/');
-       })
-       .catch((error)=>{
-           console.log(error);
-       });
-
+        const taskId=this.props.match.params.taskId;
+        this.props.deleteTask(taskId,"single");
 
     }
     onToggleModal=()=>{
@@ -51,35 +28,7 @@ class SinglTask extends Component {
             openModal: ! this.state.openModal
         });
     }
-    // saveTask=(editedTask)=>{
-    //     fetch('http://localhost:3001/task/'+editedTask._id,{
-    //         method:'Put',
-    //         body:JSON.stringify(editedTask),
-    //         headers:{
-    //          "Content-Type": "application/json"  
-    //         }
-    //     })
-    //     .then(async(response)=>{
-    //         const res=await response.json();
-    //        if(response.status>=400&&response.status<600){
-    //            if(res.error){
-    //              throw res.error;
-    //            }
-    //            else{
-    //                throw new Error("Something went wrong!!!!!!")
-    //            }
-    //        }
-           
-    //        this.setState({
-    //            task:res,
-   
-    //        });
-    //     })
-    //     .catch((error)=>{
-    //         console.log(error);
-    //     });
-    // }
-
+    
     componentDidUpdate(prevProps){
         if(!prevProps.editsingleTaskSuccess&&this.props.editsingleTaskSuccess){
             this.setState({
@@ -91,8 +40,8 @@ class SinglTask extends Component {
 
     }
     render() {
-        const {openModal}=this.state
-        const {task}=this.props
+        const {openModal}=this.state;
+        const {task}=this.props;
         return(
             <div>
               { task?
@@ -162,6 +111,7 @@ class SinglTask extends Component {
     }
     const mapDispatchToProps={
         getTask,
+        deleteTask,
     }
 
     export default connect(mapStateToProps,mapDispatchToProps)(SinglTask);

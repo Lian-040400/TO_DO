@@ -22,7 +22,8 @@ const defaultState={
           loader:true,
           successMessage:false,
           errorMessage:false,
-
+          
+    editsingleTaskSuccess:false,
         }}
         case  action_type.ERROR:{
           return{
@@ -62,6 +63,14 @@ const defaultState={
         }}
        
           case  action_type.DELETED_TASK:{
+            if(action.from==="singl"){
+              return{
+                ...state,
+                loader:false,
+                successMessage:'Task deleted successfully',
+                task:null, 
+              }}
+
             let tasks = state.tasks.filter(task => {
                       return action.deletedTaskId !== task._id;
                   })
@@ -90,7 +99,7 @@ const defaultState={
                   ...state,
                   loader:false,
                   successMessage:'Task edited successfully',
-                  task:action.editedTask,
+                  task:action.editedTask, 
                   editsingleTaskSuccess:true,
                 }}
 
