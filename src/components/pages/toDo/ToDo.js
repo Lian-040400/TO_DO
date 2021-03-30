@@ -126,9 +126,7 @@ else{
         const{tasks}=this.props;
         
         let taskComponent = tasks.map((task) => {
-            this.setState({
-                openSortAndFilterModal:!this.state.openSortAndFilterModal,
-            })
+           
            
             return (
                 <Col key={task._id}
