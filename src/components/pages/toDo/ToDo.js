@@ -124,8 +124,12 @@ else{
     render() {
         const { selectedTasks,checked,openNewTaskModal,openEditTaskModal,openSortAndFilterModal } = this.state;
         const{tasks}=this.props;
+        
         let taskComponent = tasks.map((task) => {
-
+            this.setState({
+                openSortAndFilterModal:!this.state.openSortAndFilterModal,
+            })
+           
             return (
                 <Col key={task._id}
                     xs={12}
