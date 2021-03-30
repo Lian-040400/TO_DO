@@ -9,7 +9,7 @@ export function getTasks(params={}){
 
     return(dispatch)=>{
 
-        request(`${apiHost}?${query}`)
+        request(`${apiHost}/task?${query}`)
         .then((tasks)=>{
              dispatch({type:action_type.GET_TASKS,tasks});
         })
@@ -22,7 +22,7 @@ export function getTasks(params={}){
 export function getTask(taskId){
 
     return(dispatch)=>{
-        request(`${apiHost}/${taskId}`)
+        request(`${apiHost}/task/${taskId}`)
         .then((task)=>{
              dispatch({type:action_type.GET_TASK,task});
         })
@@ -35,7 +35,7 @@ export function getTask(taskId){
 export function addTasks(newTask){
     return(dispatch)=>{
         dispatch({type:action_type.PENDING});
-        request(`${apiHost}`,'Post',newTask)
+        request(`${apiHost}/task`,'POST',newTask)
         .then((task)=>{
             dispatch({type:action_type.ADD_TASKS,task:task})
         })
@@ -49,7 +49,7 @@ export function addTasks(newTask){
 export function deleteTask(deletedTaskId,from){
     return(dispatch)=>{
         dispatch({type:action_type.PENDING});
-        request(`${apiHost}`+deletedTaskId,'DELETE')
+        request(`${apiHost}/task/${deletedTaskId}`,'DELETE')
         .then(()=>{
            
             dispatch({type:action_type.DELETED_TASK,deletedTaskId,from});
@@ -67,7 +67,7 @@ export function deleteTask(deletedTaskId,from){
 export function deleteTasks(deletedTaskId){
     return(dispatch)=>{
         dispatch({type:action_type.PENDING});
-        request(`${apiHost}`,'PATCH',{tasks:[...deletedTaskId]})
+        request(`${apiHost}/task`,'PATCH',{tasks:[...deletedTaskId]})
         .then(()=>{
             dispatch({type:action_type.DELETED_TASKS,deletedTaskId})
         })
@@ -80,7 +80,7 @@ export function deleteTasks(deletedTaskId){
 export function editTask(data,from){
     return(dispatch)=>{
         dispatch({type:action_type.PENDING});
-        request(`${apiHost}`+data._id,'PUT',data)
+        request(`${apiHost}/task/${data._id}`,'PUT',data)
         .then((editedTask)=>{
             dispatch({type:action_type.EDITED_TASK,editedTask,from})
         })
