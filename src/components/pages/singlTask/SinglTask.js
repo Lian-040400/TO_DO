@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import {  Button, Card, Container,Row,Col } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash,faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faTrash,faEdit,faCheck,faRedo } from '@fortawesome/free-solid-svg-icons';
 import sliceDate from '../../../additional_function/slice';
 import EditTask from "../../editTask/EditTask";
 import { connect } from "react-redux";
-import { getTask,deleteTask } from "../../store/action";
+import { getTask,deleteTask,editTask } from "../../../store/action";
 
 class SinglTask extends Component {
     state = {
         openModal:false,
+       
     };
     componentDidMount() {
         const taskId = this.props.match.params.taskId;
@@ -28,20 +29,24 @@ class SinglTask extends Component {
             openModal: ! this.state.openModal
         });
     }
+   
     
     componentDidUpdate(prevProps){
+       
+
         if(!prevProps.editsingleTaskSuccess&&this.props.editsingleTaskSuccess){
             this.setState({
                openModal:false,
+               
             });
             return;
         }
-       
-
     }
+
     render() {
         const {openModal}=this.state;
-        const {task}=this.props;
+        const {task,editTask}=this.props;
+       
         return(
             <div>
               { task?
@@ -55,8 +60,30 @@ class SinglTask extends Component {
                      Description: {task.description}
                    </Card.Text>
                    <Card.Text>
+                      Status: {task.status}
+                    </Card.Text>
+                   <Card.Text>
                      Date: {sliceDate(task.date) }
                    </Card.Text>
+                   <Card.Text>
+                      Created: {sliceDate(task.created_at) }
+                    </Card.Text>
+                   {task.status==="active"? <Button
+                        variant="success"
+                        onClick={() => editTask({status:"done",_id:task._id},"single")}
+                        className="m-1"
+                    >
+                        <FontAwesomeIcon icon={faCheck}/>
+                    </Button>
+                    :<Button
+                        variant="secondary"
+                        onClick={() => editTask({status:"active",_id:task._id},"single")}
+                       
+                        className="m-1"
+                    >
+                        <FontAwesomeIcon icon={faRedo}/>
+                    </Button>}
+
                    <Button
                        variant="warning" 
                        className="m-1"
@@ -89,7 +116,7 @@ class SinglTask extends Component {
                     <EditTask
                     data={task}
                 onClose={this.onToggleModal}
-                from={'singl'}
+                from={'single'}
                 />
                  
               
@@ -106,12 +133,14 @@ class SinglTask extends Component {
         return{
             task:state.task,
             editsingleTaskSuccess:state.editsingleTaskSuccess,
+           
         }
     
     }
     const mapDispatchToProps={
         getTask,
         deleteTask,
+        editTask
     }
 
     export default connect(mapStateToProps,mapDispatchToProps)(SinglTask);
