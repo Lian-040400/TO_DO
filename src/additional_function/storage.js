@@ -1,5 +1,7 @@
 import decode from 'jwt-decode';
-
+import { store } from "../store/store";
+import { LOGOUT } from "../store/action_type";
+import {history} from "../additional_function/history";
 export function requestWithoutToken(url,method="GET",body) {
    
         const config={
@@ -32,7 +34,7 @@ export function requestWithoutToken(url,method="GET",body) {
     }
 
 
-export const checkLoginStatus=()=>!!localStorage.getItem("token");
+export function checkLoginStatus(){return !!localStorage.getItem("token");}
 
 export const getToken=()=>{
     const token= localStorage.getItem("token");
@@ -40,7 +42,7 @@ export const getToken=()=>{
        const parsed= JSON.parse(token); 
        const decoded=decode(parsed.jwt);
        
-       if(decoded.exp- new Date().getTime()/1000>580){
+       if(decoded.exp- new Date().getTime()/1000>60){
            return Promise.resolve(parsed.jwt) ;
        }
        else{
@@ -67,8 +69,11 @@ else{
     logout();
 }
 }
-export function logout(){
-    console.log("logoutttttttt");
+export function logout(token){
+    localStorage.removeItem('token');
+    store.dispatch({type:LOGOUT});
+    history.push("/login");
+    
 }
 export function saveToken(token){
     localStorage.setItem('token',JSON.stringify(token));

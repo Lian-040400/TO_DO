@@ -4,8 +4,13 @@ import styles from "./navBar.module.css";
 import { NavLink } from 'react-router-dom';
 import { Container, Col, Row } from "react-bootstrap";
 import { connect } from "react-redux";
-
+import { history } from "../../additional_function/history";
+import { logout } from "../../additional_function/storage";
 function NavBar({ isAuthenticated }) {
+    function handleSubmit() {
+        logout();
+        
+    }
     return (
         <>
             <Navbar bg="primary" variant="dark">
@@ -43,7 +48,8 @@ function NavBar({ isAuthenticated }) {
                             </Col>
                             {isAuthenticated 
                             ?
-                            <Button>Log out</Button>:
+                            <Button
+                            onClick={handleSubmit}>Log out</Button>:
                             <>
                             <Col>
                             <NavLink to="/register"

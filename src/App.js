@@ -106,8 +106,10 @@ function App(props) {
       </Switch>
    </Router> 
 
+
    {loader &&<SpinnerForPending/>}
    <ToastContainer/>
+   
     </>
    
 

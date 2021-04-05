@@ -12,6 +12,7 @@ export function getTasks(params={}){
 
         request(`${apiHost}/task?${query}`)
         .then((tasks)=>{
+            if(!tasks) return;
              dispatch({type:action_type.GET_TASKS,tasks});
         })
         .catch((error)=>{
@@ -25,6 +26,7 @@ export function getTask(taskId){
     return(dispatch)=>{
         request(`${apiHost}/task/${taskId}`)
         .then((task)=>{
+            if(!task) return;
              dispatch({type:action_type.GET_TASK,task});
         })
         .catch((error)=>{
@@ -38,6 +40,7 @@ export function addTasks(newTask){
         dispatch({type:action_type.PENDING});
         request(`${apiHost}/task`,'POST',newTask)
         .then((task)=>{
+            if(!task) return;
             dispatch({type:action_type.ADD_TASKS,task:task})
         })
         .catch((error)=>{
@@ -51,8 +54,8 @@ export function deleteTask(deletedTaskId,from){
     return(dispatch)=>{
         dispatch({type:action_type.PENDING});
         request(`${apiHost}/task/${deletedTaskId}`,'DELETE')
-        .then(()=>{
-           
+        .then((res)=>{
+            if(!res) return;
             dispatch({type:action_type.DELETED_TASK,deletedTaskId,from});
              if(from==="single"){
                 history.push("/");
@@ -69,7 +72,8 @@ export function deleteTasks(deletedTaskId){
     return(dispatch)=>{
         dispatch({type:action_type.PENDING});
         request(`${apiHost}/task`,'PATCH',{tasks:[...deletedTaskId]})
-        .then(()=>{
+        .then((res)=>{
+            if(!res) return;
             dispatch({type:action_type.DELETED_TASKS,deletedTaskId})
         })
          .catch((error)=>{
@@ -83,6 +87,7 @@ export function editTask(data,from){
         dispatch({type:action_type.PENDING});
         request(`${apiHost}/task/${data._id}`,'PUT',data)
         .then((editedTask)=>{
+            if(!editedTask) return;
             dispatch({type:action_type.EDITED_TASK,editedTask,from,status:data.status})
         })
         .catch((error)=>{
@@ -94,7 +99,7 @@ export function editTask(data,from){
 export function sendContactFormData(data){
     return(dispatch)=>{
         dispatch({type:action_type.PENDING});
-        request(`${apiHost}/form`,'POST',data)
+        requestWithoutToken(`${apiHost}/form`,'POST',data)
         .then(()=>{
             dispatch({type:action_type.SEND_CONTACT_FORM_DATA})
         })

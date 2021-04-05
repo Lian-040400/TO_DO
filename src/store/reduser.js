@@ -158,7 +158,16 @@ case action_type.SEND_LOGIN_DATA:{
     loader:false,
   isAuthenticated:true,
 
-  }
+  }}
+  case action_type.LOGOUT:{
+    return{
+      ...state,
+      loader:false,
+    isAuthenticated:false,
+  
+    }
+  
+  
 
 }
               

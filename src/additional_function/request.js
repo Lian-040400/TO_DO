@@ -1,7 +1,7 @@
 import { getToken } from "./storage";
 export default async function request(url,method="GET",body) {
 const token=await getToken();
-console.log("token",token);
+if(!token) return Promise.resolve(null);
     const config={
         method: method,
        headers:{
