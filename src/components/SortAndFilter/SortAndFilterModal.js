@@ -2,7 +2,7 @@
 import React,{useState} from "react";
 import { connect } from "react-redux";
 import sliceDate  from "../../additional_function/slice";
-import { getTasks } from "../store/action";
+import { getTasks } from "../../store/action";
 import { Modal, Form, Button,DropdownButton,Dropdown,InputGroup, Row, Col } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 function SortAndFilterModal(props) {

@@ -1,4 +1,5 @@
 import * as action_type from './action_type';
+import { checkLoginStatus } from "../additional_function/storage";
 const defaultState={
     tasks:[],
     task:null,
@@ -9,6 +10,8 @@ const defaultState={
     loader:false,
     errorMessage:'',
     successMessage:'',
+    sendContactFormDataSuccess:false,
+    isAuthenticated:checkLoginStatus(),
   }
   export default function reduser(state=defaultState,action) {
     
@@ -22,8 +25,9 @@ const defaultState={
           loader:true,
           successMessage:false,
           errorMessage:false,
-          
-    editsingleTaskSuccess:false,
+          editsingleTaskSuccess:false,
+          sendContactFormDataSuccess:false,
+
         }}
         case  action_type.ERROR:{
           return{
@@ -94,13 +98,26 @@ const defaultState={
               }}
              
             case action_type.EDITED_TASK:{
-              if(action.from==="singl"){
+              
+              let message='Task edited successfully';
+              if(action.status){
+                if(action.status==="done"){
+
+                message="Congrats, you have comleted the task!!!!";
+
+              }
+              else{
+                message="The task is active now!!!!"
+              }}
+              if(action.from==="single"){
+                console.log("baaaaaaaa");
                 return{
                   ...state,
                   loader:false,
-                  successMessage:'Task edited successfully',
+                  successMessage:message,
                   task:action.editedTask, 
                   editsingleTaskSuccess:true,
+                 
                 }}
 
               
@@ -113,8 +130,36 @@ const defaultState={
                 tasks,
                 editTaskSuccess:true,
                 loader:false,
-                successMessage:'Task edited successfully',
+                successMessage:message,
               }
+}
+case action_type.SEND_CONTACT_FORM_DATA:{
+  return{
+    ...state,
+    loader:false,
+    successMessage:'Form data send successfully',
+    sendContactFormDataSuccess:true,
+
+  }
+
+}
+case action_type.SEND_REGISTER_DATA:{
+  return{
+    ...state,
+    loader:false,
+    successMessage:'Register data send successfully',
+
+  }
+
+}
+case action_type.SEND_LOGIN_DATA:{
+  return{
+    ...state,
+    loader:false,
+  isAuthenticated:true,
+
+  }
+
 }
               
       default:{

@@ -1,9 +1,12 @@
-export default function request(url,method="GET",body) {
-
+import { getToken } from "./storage";
+export default async function request(url,method="GET",body) {
+const token=await getToken();
+console.log("token",token);
     const config={
         method: method,
        headers:{
-        "Content-Type": "application/json" 
+        "Content-Type": "application/json",
+        "Authorization":`Bearer ${token}` 
        }
     }
     if(body){
